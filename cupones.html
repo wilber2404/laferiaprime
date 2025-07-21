@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Feria del Bebé</title>
+  <link rel="icon" href="Imagenes/Bebe.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+<style>
+
+
+.mensaje-cupon {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #4caf50;
+  color: white;
+  padding: 16px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  z-index: 1000;
+  animation: fadein 0.3s ease, fadeout 0.3s ease 3.7s;
+}
+
+
+.subnav a {
+  text-decoration: none; /* 🔥 Esto quita la línea */
+  color: #795548;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeout {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+.seccion-cupones {
+  padding: 30px;
+  background-color: #fffef5;
+}
+
+.titulo-cupones {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.cupones-usuario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cupon-tarjeta {
+  background: #fff;
+  border: 2px dashed #ffc107;
+  border-radius: 12px;
+  padding: 20px;
+  width: 280px;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.cupon-tarjeta:hover {
+  transform: scale(1.02);
+}
+
+.cupon-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.codigo-cupon {
+  background: #fff3cd;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #856404;
+}
+
+.cupon-descripcion,
+.cupon-vencimiento {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.btn-aplicar-cupon {
+  background-color: #ffc107;
+  border: none;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-aplicar-cupon:hover {
+  background-color: #ffca2c;
+}
+
+.agregar-cupon {
+  margin-top: 40px;
+  background: #fff8e1;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+}
+
+.agregar-cupon input {
+  padding: 10px;
+  width: 70%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.agregar-cupon button {
+  background-color: #ff9800;
+  color: #fff;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.agregar-cupon button:hover {
+  background-color: #fb8c00;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+  <div id="loader">
+  <img src="Imagenes/Bebe.png" alt="Cargando..." class="logo-loader" />
+</div>
+
+    <div class="header">
+        <div class="header-left">
+            <img src="Imagenes/Bebe.png" alt="Logo" class="logo-img">
+            <a href="index.html" class="nombre-marca"><strong>La Feria del Bebé</strong></a>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="buscador" placeholder="Buscar productos...">
+                <button id="botonBuscar">🔍</button>
+            </div>
+            <div id="sugerencias" class="sugerencias"></div>
+        </div>
+
+        <div class="header-right">
+
+            <div class="selector-ubicacion-wrapper">
+                <div class="selector-ubicacion-header" id="selectorCiudad" onclick="toggleMenu()">
+                    <img src="Imagenes/comolbia.pgn.webp" alt="#" class="bandera-header">
+                    <span id="ubicacion-seleccionada-header" class="ciudad-texto">Colombia</span>
+                    <span class="flecha-header">▼</span>
+                </div>
+
+                <ul class="lista-ciudades-header" id="listaCiudades">
+                    <li onclick="seleccionarCiudad('quibdo', 'Quibdó')">Quibdó</li>
+                    <li onclick="seleccionarCiudad('bucaramanga', 'Bucaramanga')">Bucaramanga</li>
+                    <li onclick="seleccionarCiudad('medellin', 'Medellín')">Medellín</li>
+                    <li onclick="seleccionarCiudad('cali', 'Cali')">Cali</li>
+                </ul>
+            </div>
+
+            <div id="usuario-header">
+            <a href="#" onclick="abrirModal()">Iniciar sesión</a>
+            <a href="#" onclick="abrirModal('register')">Registrarse</a>
+            </div>
+            <span id="nombre-usuario-header" style="display: none; color: white; font-weight: bold;"></span>
+            <a href="#" id="btn-logout-header" onclick="cerrarSesion()" style="display: none;">Cerrar sesión</a>
+            <a href="Carrito.html" id="carrito-link" style="color: white; font-weight: bold; text-decoration: none;">
+    🛒 <span id="contador-carrito">0</span>
+</a>
+        </div>
+    </div>
+
+    <div class="subnav">
+  <a href="cupones.html">Cupones</a>
+  <a href="productos.html">Todo para tu bebé</a>
+  <a href="consejos.html">Consejos de mamá</a>
+  <a href="ofertas.html">Ofertas exclusivas</a>
+  <a href="ayuda.html">Ayuda</a>
+</div>
+
+    <div class="content-wrapper">
+
+        <div class="menu-cuenta">
+            <h3>Mi cuenta</h3>
+
+            <div class="banner-prime">
+                <img src="tu-banner-prime.png" alt="Prime"> <a href="#">¡Quiero ahora!</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Créditos y cupones</p>
+                <a href="cupones.html" class="active-menu-item"><i class="fa-solid fa-ticket"></i> ¿Tienes un cupón?</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Tu cuenta</p>
+                <a href="perfil.html"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                <a href="feriaprime.html"><i class="fa-solid fa-crown"></i> La feria Prime</a>
+                <a href="direccion.html" ><i class="fa-solid fa-location-dot"></i> Mis direcciones</a>
+                <a href="#" onclick="abrirModal('modal-agregar-tarjeta')">
+                <i class="fa-solid fa-credit-card"></i> Mis tarjetas</a>
+
+
+
+
+                <a href="#"><i class="fa-solid fa-lock"></i> Cambia tu contraseña</a>
+                <a href="#"><i class="fa-solid fa-bag-shopping"></i> Mis compras</a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notificaciones</a>
+                <a href="#"><i class="fa-solid fa-pills"></i> Pastillero virtual</a>
+                <a href="#"><i class="fa-solid fa-heart"></i> Mis favoritos</a>
+                <a href="#"><i class="fa-solid fa-store"></i> Mis tiendas</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Ajustes y ayuda</p>
+                <a href="#"><i class="fa-solid fa-shield-halved"></i> Políticas de privacidad</a>
+                <a href="#"><i class="fa-solid fa-circle-question"></i> Soporte</a>
+                <a href="#"><i class="fa-solid fa-envelope"></i> Contáctenos</a>
+                <a href="#"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
+            </div>
+        </div>
+    
+<section class="seccion-cupones">
+  <h2 class="titulo-cupones">🎟️ Mis Cupones</h2>
+
+  <div class="cupones-usuario">
+    <!-- Cupón ya guardado -->
+    <div class="cupon-tarjeta">
+      <div class="cupon-header">
+        <h3>Descuento del 20%</h3>
+        <span class="codigo-cupon">MIBEBE20</span>
+      </div>
+      <p class="cupon-descripcion">Aplica en compras superiores a $100.000</p>
+      <p class="cupon-vencimiento">Válido hasta: 31/12/2025</p>
+      <button class="btn-aplicar-cupon" onclick="aplicarCupon('MIBEBE20')">Aplicar cupón</button>
+
+    </div>
+
+    <!-- Otro cupón -->
+    <div class="cupon-tarjeta">
+      <div class="cupon-header">
+        <h3>Envío Gratis</h3>
+        <span class="codigo-cupon">ENVIOBEBE</span>
+      </div>
+      <p class="cupon-descripcion">Solo en productos seleccionados</p>
+      <p class="cupon-vencimiento">Válido hasta: 15/08/2025</p>
+      <button class="btn-aplicar-cupon" onclick="aplicarCupon('ENVIOBEBE')">Aplicar cupón</button>
+
+    </div>
+  </div>
+
+  <!-- Agregar cupón manualmente -->
+  <div class="agregar-cupon">
+    <h3>¿Tienes un cupón?</h3>
+    <input type="text" id="codigo-cupon-input" placeholder="Ingresa tu código aquí">
+    <button onclick="agregarCupon()">Agregar</button>
+  </div>
+</section>
+<div id="mensaje-cupon" class="mensaje-cupon" style="display: none;"></div>
+
+
+</div>
+
+<!-- MODAL UNIFICADA -->
+ 
+<div id="modal-agregar-tarjeta" class="modal" style="display: none;" onclick="cerrarDesdeFondo(event)">
+
+  <div class="modal-contenido">
+
+    <!-- 1. SECCIÓN DE BIENVENIDA -->
+    <div id="seccion-bienvenida">
+      <h2>Configura tus tarjetas de crédito</h2>
+      <p>No hay tarjetas de crédito asociadas.</p>
+      <button class="btn-guardar" onclick="iniciarProcesoAgregar()">Agregar tarjeta de crédito</button>
+    </div>
+
+    <!-- 2. LOADER -->
+    <div id="loader-tarjeta" class="loader" style="display: none;">
+      <img src="Imagenes/Bebe.png" alt="Cargando..." class="logo-loader">
+      <p>Cargando tu billetera mágica...</p>
+    </div>
+
+    <!-- 3. FORMULARIO -->
+    <form id="form-tarjeta" style="display: none;" onsubmit="guardarTarjeta(); return false;">
+      <h2>Inserta tu tarjeta de crédito/débito</h2>
+
+      <div class="logos-tarjetas">
+        <img src="Imagenes/visa.png" alt="Visa">
+        <img src="Imagenes/mastercard.png" alt="MasterCard">
+        <img src="Imagenes/amex.png" alt="Amex">
+        <img src="Imagenes/discover.png" alt="Discover">
+      </div>
+
+      <label for="numero">Número de tarjeta</label>
+      <div class="input-logo">
+        <input type="text" id="numero" maxlength="19" placeholder="1234 5678 9012 3456" oninput="formatearNumeroTarjeta(this)" required>
+        <img id="logo-tarjeta" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png" alt="" class="logo-tarjeta">
+      </div>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="expiracion">Expiración (MM/AA)</label>
+          <input type="text" id="expiracion" maxlength="5" placeholder="MM/AA" oninput="formatearExpiracion(this)" required>
+        </div>
+        <div class="campo-flex">
+          <label for="cvv">Código de seguridad</label>
+          <input type="text" id="cvv" maxlength="4" placeholder="CVC/CVV" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="titular">Nombre del titular</label>
+      <input type="text" id="titular" placeholder="Ej: Juan Pérez" oninput="soloLetras(this)" required>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="tipo-documento">Tipo de documento</label>
+          <select id="tipo-documento" required>
+            <option value="">Selecciona</option>
+            <option value="CC">Cédula de Ciudadanía</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CE">Cédula de Extranjería</option>
+            <option value="PA">Pasaporte</option>
+            <option value="NIT">NIT</option>
+          </select>
+        </div>
+
+        <div class="campo-flex">
+          <label for="cedula">Número de documento</label>
+          <input type="text" id="cedula" placeholder="Ej: 123456789" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="telefono">Teléfono</label>
+      <input type="text" id="telefono" placeholder="Ej: 3101234567" maxlength="10" oninput="soloNumeros(this)" required>
+
+      <button class="btn-guardar">Guardar</button>
+    </form>
+
+  </div>
+</div>
+        
+
+
+
+
+<footer class="footer-bebe">
+  <div class="footer-contenido">
+    <div class="footer-logo">
+      <img src="Imagenes/Bebe.png" alt="Logo La Feria del Bebé">
+      <h3>La Feria del Bebé</h3>
+      <p>Con amor para los más pequeños 💕</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Enlaces útiles</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Consejos</a></li>
+        <li><a href="Carrito.html">Carrito</a></li>
+        <li><a href="perfil.html">Cuenta</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>Contáctanos</h4>
+      <p><i class="fa fa-envelope"></i> soporte@feriadelbebe.com</p>
+      <p><i class="fa fa-phone"></i> +57 312 541 9816</p>
+      <div class="footer-redes">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/573125419816" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="footer-copy">
+    &copy; 2025 La Feria del Bebé. Todos los derechos reservados.
+  </div>
+</footer>
+
+
+<script src="js/script.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u/pRLPNxHbUePfM7N6q/2sK3V5b7Q1+5Jb/L3C/l3D+N5F3t2N3i4Q2j+S2Q5Q2xQ2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Seleccionar los elementos
+    const diaSelect = document.getElementById('dia-nacimiento');
+    const mesSelect = document.getElementById('mes-nacimiento');
+    const añoSelect = document.getElementById('año-nacimiento');
+
+    // Llenar días del 1 al 31
+    for (let i = 1; i <= 31; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      diaSelect.appendChild(option);
+    }
+
+    // Llenar meses
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    meses.forEach((mes, i) => {
+      const option = document.createElement('option');
+      option.value = i + 1;
+      option.textContent = mes;
+      mesSelect.appendChild(option);
+    });
+
+    // Llenar años desde el actual hasta 1940
+    const añoActual = new Date().getFullYear();
+    for (let i = añoActual; i >= 1940; i--) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      añoSelect.appendChild(option);
+    }
+  });
+</script>
+
+<script>
+  const inputCelular = document.getElementById('celular');
+
+  inputCelular.addEventListener('input', () => {
+    inputCelular.value = inputCelular.value.replace(/\D/g, ''); // solo números
+  });
+
+  // Validación simple al enviar formulario
+  document.getElementById('form-perfil').addEventListener('submit', (e) => {
+    const numero = inputCelular.value;
+    if (numero.length !== 10) {
+      e.preventDefault();
+      alert("El número de celular debe tener 10 dígitos.");
+    }
+  });
+</script>
+
+<script>
+  const btnEditar = document.getElementById('btnEditar');
+  const mensajeExito = document.getElementById('mensajeExito');
+  const campos = document.querySelectorAll('#form-perfil input, #form-perfil select');
+  const nombreMostrado = document.getElementById('nombreMostrado');
+
+  let modoEdicion = false;
+
+  // Cargar datos desde localStorage al iniciar
+  window.addEventListener('DOMContentLoaded', () => {
+    campos.forEach(campo => {
+      const valorGuardado = localStorage.getItem(campo.id);
+      if (valorGuardado !== null) {
+        if (campo.type === "radio") {
+          campo.checked = (campo.value === valorGuardado);
+        } else {
+          campo.value = valorGuardado;
+        }
+      }
+    });
+
+    // También actualiza el nombre visual si hay datos
+    const nombre = localStorage.getItem("nombre");
+    const apellido = localStorage.getItem("apellido");
+    if (nombre && apellido) {
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+    }
+  });
+
+  btnEditar.addEventListener('click', () => {
+    if (!modoEdicion) {
+      campos.forEach(campo => {
+        if (campo.id !== 'correo' && campo.id !== 'cedula') {
+          campo.removeAttribute('readonly');
+          campo.removeAttribute('disabled');
+        }
+      });
+
+      btnEditar.textContent = 'Guardar cambios';
+      btnEditar.classList.add('activo');
+      modoEdicion = true;
+    } else {
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const celular = document.getElementById('celular').value.trim();
+
+      if (nombre === '' || celular.length !== 10) {
+        alert('Verifica que el nombre no esté vacío y el celular tenga 10 dígitos.');
+        return;
+      }
+
+      // Guardar en localStorage
+      campos.forEach(campo => {
+        if (campo.type === "radio") {
+          if (campo.checked) {
+            localStorage.setItem(campo.name, campo.value);
+          }
+        } else {
+          localStorage.setItem(campo.id, campo.value);
+        }
+      });
+
+      // Actualizar nombre visual
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+
+      campos.forEach(campo => {
+        if (campo.tagName === 'INPUT') campo.setAttribute('readonly', true);
+        else campo.setAttribute('disabled', true);
+      });
+
+      btnEditar.textContent = 'Editar perfil';
+      btnEditar.classList.remove('activo');
+      modoEdicion = false;
+
+      mensajeExito.style.display = 'inline';
+      // MOSTRAR MENSAJE DE ÉXITO DESPUÉS DE UN PEQUEÑO DELAY
+      setTimeout(() => {
+      mensajeExito.style.display = 'inline';
+
+      setTimeout(() => {
+      mensajeExito.style.display = 'none';
+      }, 3000); // lo muestra por 3 segundos
+    }, 1000); // espera 1 segundo antes de mostrar
+
+  }
+  });
+</script>
+<!-- index.html -->
+
+
+
+
+
+
+
+
+
+            
+
+
+
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+
+    // Espera 2 segundos antes de comenzar a ocultarlo
+    setTimeout(() => {
+      loader.style.opacity = 0;
+      setTimeout(() => loader.style.display = "none", 500); // Oculta después de la transición
+    }, 2000); // ⬅ Aquí defines cuánto tiempo se queda visible (2000 ms = 2s)
+  });
+</script>
+
+
+
+<script type="module" src="/js/auth.js"></script>
+<script>
+  window.onload = () => {
+    initAuthHeader();
+  };
+</script>
+
+    
+  </body>
+
+</html>

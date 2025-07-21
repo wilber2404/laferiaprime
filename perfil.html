@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Feria del Bebé</title>
+  <link rel="icon" href="Imagenes/Bebe.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+
+  
+
+.btn-abrir {
+  padding: 12px 24px;
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.subnav a {
+  text-decoration: none; /* 🔥 Esto quita la línea */
+  color: #795548;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  display: none;
+}
+
+.modal-contenido {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn-guardar {
+  margin-top: 25px;
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.logo-loader {
+  width: 80px;
+  height: 80px;
+  animation: giro 2s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes giro {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.logos-tarjetas {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 10px 0 25px;
+}
+
+.logos-tarjetas img {
+  height: 32px;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.logos-tarjetas img:hover {
+  filter: none;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  width: 100%;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23333' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+  padding-right: 36px;
+}
+
+.input-logo {
+  position: relative;
+}
+
+.logo-tarjeta {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  height: 28px;
+  transform: translateY(-50%);
+}
+.modal-simple {
+  text-align: center;
+  padding: 30px;
+}
+
+.modal-simple .cerrar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+}
+#modal-agregar-tarjeta .modal-contenido {
+  text-align: left; /* Forzamos alineación izquierda */
+}
+
+#modal-agregar-tarjeta label {
+  display: none;
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-align: left;
+}
+
+#modal-agregar-tarjeta input,
+#modal-agregar-tarjeta select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+
+  </style>
+
+
+</head>
+
+<body>
+
+  
+
+    <div class="header">
+        <div class="header-left">
+            <img src="Imagenes/Bebe.png" alt="Logo" class="logo-img">
+            <a href="index.html" class="nombre-marca"><strong>La Feria del Bebé</strong></a>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="buscador" placeholder="Buscar productos...">
+                <button id="botonBuscar">🔍</button>
+            </div>
+            <div id="sugerencias" class="sugerencias"></div>
+        </div>
+
+        <div class="header-right">
+
+            <div class="selector-ubicacion-wrapper">
+                <div class="selector-ubicacion-header" id="selectorCiudad" onclick="toggleMenu()">
+                    <img src="Imagenes/comolbia.pgn.webp" alt="#" class="bandera-header">
+                    <span id="ubicacion-seleccionada-header" class="ciudad-texto">Colombia</span>
+                    <span class="flecha-header">▼</span>
+                </div>
+
+                <ul class="lista-ciudades-header" id="listaCiudades">
+                    <li onclick="seleccionarCiudad('quibdo', 'Quibdó')">Quibdó</li>
+                    <li onclick="seleccionarCiudad('bucaramanga', 'Bucaramanga')">Bucaramanga</li>
+                    <li onclick="seleccionarCiudad('medellin', 'Medellín')">Medellín</li>
+                    <li onclick="seleccionarCiudad('cali', 'Cali')">Cali</li>
+                </ul>
+            </div>
+
+            <div id="usuario-header">
+            <a href="#" onclick="abrirModal()">Iniciar sesión</a>
+            <a href="#" onclick="abrirModal('register')">Registrarse</a>
+            </div>
+            <span id="nombre-usuario-header" style="display: none; color: white; font-weight: bold;"></span>
+            <a href="#" id="btn-logout-header" onclick="cerrarSesion()" style="display: none;">Cerrar sesión</a>
+            <a href="Carrito.html" id="carrito-link" style="color: white; font-weight: bold; text-decoration: none;">
+            🛒 <span id="contador-carrito">0</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="subnav">
+  <a href="cupones.html">Cupones</a>
+  <a href="productos.html">Todo para tu bebé</a>
+  <a href="consejos.html">Consejos de mamá</a>
+  <a href="ofertas.html">Ofertas exclusivas</a>
+  <a href="ayuda.html">Ayuda</a>
+</div>
+
+    <div class="content-wrapper">
+
+        <div class="menu-cuenta">
+            <h3>Mi cuenta</h3>
+
+            <div class="banner-prime">
+                <img src="tu-banner-prime.png" alt="Prime"> <a href="#">¡Quiero ahora!</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Créditos y cupones</p>
+                <a href="cupones.html"><i class="fa-solid fa-ticket"></i> ¿Tienes un cupón?</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Tu cuenta</p>
+                <a href="#" class="active-menu-item"><i class="fa-solid fa-user"></i> Mi perfil</a>
+                <a href="feriaprime.html"><i class="fa-solid fa-crown"></i> La feria Prime</a>
+                <a href="direccion.html"><i class="fa-solid fa-location-dot"></i> Mis direcciones</a>
+                <a href="#" onclick="abrirModal('modal-agregar-tarjeta')">
+                <i class="fa-solid fa-credit-card"></i> Mis tarjetas
+</a>
+
+
+
+
+                <a href="#"><i class="fa-solid fa-lock"></i> Cambia tu contraseña</a>
+                <a href="#"><i class="fa-solid fa-bag-shopping"></i> Mis compras</a>
+                <a href="#"><i class="fa-solid fa-bell"></i> Notificaciones</a>
+                <a href="#"><i class="fa-solid fa-pills"></i> Pastillero virtual</a>
+                <a href="#"><i class="fa-solid fa-heart"></i> Mis favoritos</a>
+                <a href="#"><i class="fa-solid fa-store"></i> Mis tiendas</a>
+            </div>
+
+            <div class="grupo-menu">
+                <p class="titulo-grupo">Ajustes y ayuda</p>
+                <a href="#"><i class="fa-solid fa-shield-halved"></i> Políticas de privacidad</a>
+                <a href="#"><i class="fa-solid fa-circle-question"></i> Soporte</a>
+                <a href="#"><i class="fa-solid fa-envelope"></i> Contáctenos</a>
+                <a href="#"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
+            </div>
+        </div>
+    
+
+
+        
+        
+
+<div class="perfil-usuario-container">
+            <div class="seccion-principal-perfil">
+                <div class="info-superior-perfil">
+                    <i class="fa-solid fa-circle-user avatar-perfil-icon"></i>
+                    <div class="nombre-usuario">
+                        <h2 id="nombreMostrado">Wilber Domínguez</h2>
+
+                        <p>wwilcrown@gmail.com</p>
+                    </div>
+                </div>
+
+               <div class="datos-personales-form">
+  <h3>Mi Perfil</h3>
+
+  <form id="form-perfil">
+
+    
+<!-- Nombre + Apellido -->
+<div class="grupo-doble">
+  <div class="campo-mitad">
+    <label for="nombre">Nombres</label>
+    <input type="text" id="nombre" name="nombre" value="Wilber" readonly>
+  </div>
+
+  <div class="campo-mitad">
+    <label for="apellido">Apellido</label>
+    <input type="text" id="apellido" name="apellido" value="Domínguez" readonly>
+  </div>
+</div>
+
+
+
+
+    
+
+    <!-- Celular -->
+<div class="grupo-campo">
+  <label for="celular">Celular</label>
+  <div class="input-con-prefijo">
+    <select id="prefijo-celular">
+      <option value="+57" selected>+57</option>
+    </select>
+    <input type="tel" id="celular" name="celular" placeholder="3001234567" maxlength="10" required>
+  </div>
+  <span id="error-celular" style="color: red; display: none;">Debe tener 10 dígitos</span>
+</div>
+
+
+
+<!-- Correo -->
+    <div class="grupo-campo">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" value="correo" readonly class="bloqueado">
+    </div>
+
+    <!-- Cédula -->
+    <div class="grupo-campo">
+      <label for="cedula">Cédula</label>
+      <input type="text" id="cedula" value="1076820215" readonly class="bloqueado">
+      <p class="nota-campo">
+        Para solicitar el cambio de cédula <a href="#">haz clic aquí</a>
+      </p>
+    </div>
+
+    <!-- Fecha de nacimiento -->
+    <div class="grupo-campo">
+  <label for="fecha-nacimiento">Fecha de Nacimiento</label>
+  <div class="selector-fecha">
+    <select id="dia-nacimiento">
+      <option value="">Día</option>
+      <!-- Puedes generar dinámicamente del 1 al 31 -->
+    </select>
+    <select id="mes-nacimiento">
+      <option value="">Mes</option>
+      <!-- Puedes agregar: Enero, Febrero... -->
+    </select>
+    <select id="año-nacimiento">
+      <option value="">Año</option>
+      <!-- Puedes generar dinámicamente -->
+    </select>
+  </div>
+</div>
+
+
+    <!-- Género -->
+    <div class="grupo-campo">
+  <label class="etiqueta-genero">Género</label>
+  <div class="opciones-radio">
+    <label>
+      <input type="radio" name="genero" value="femenino">
+      Femenino
+    </label>
+    <label>
+      <input type="radio" name="genero" value="masculino" checked>
+      Masculino
+    </label>
+  </div>
+</div>
+
+
+ <!-- Acciones -->
+<div class="acciones-perfil">
+  <span class="mensaje-error" style="display: none;">Por favor completa todos los datos</span>
+  <span class="mensaje-exito" id="mensajeExito" style="display: none; color: green; font-weight: bold; margin-top: 10px;">
+    ✅ ¡Cambios guardados exitosamente!
+  </span>
+
+  <button type="button" class="btn-editar-perfil" id="btnEditar">Editar perfil</button>
+ </div>
+                
+  <div id="modal-auth" class="modal" onclick="cerrarModalDesdeFondo(event)">
+  <div class="modal-content">
+    <h2>Bienvenido a La Feria del Bebé</h2>
+
+   <!-- Login con Google -->
+    <div class="login-social-full">
+      <div id="googleButton"></div>
+    </div>
+    <div class="separator"><span>o</span></div>
+
+    <form id="form-login" class="form-auth">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-usuario" required>
+
+      <label>Contraseña</label>
+      <input type="password" id="login-clave" required>
+
+      <button type="submit" class="boton-login-verde">Iniciar sesión</button>
+
+      <p style="text-align: center; margin-top: 10px;">
+        ¿No tienes cuenta? <a href="#" onclick="mostrarFormulario('register')">Regístrate aquí</a>
+      </p>
+    </form>
+
+    <form id="form-register" class="form-auth" style="display: none;">
+      <label>Nombre completo</label>
+      <input type="text" id="register-nombre" required>
+
+      <label>Correo electrónico</label>
+      <input type="email" id="register-email" required>
+
+      <label>Contraseña</label>
+      <input type="password" id="register-password" required>
+
+      <button type="submit" class="boton-login-verde">Crear cuenta</button>
+
+      <p style="text-align: center; margin-top: 10px;">
+        ¿Ya tienes cuenta? <a href="#" onclick="mostrarFormulario('login')">Inicia sesión</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+     <!-- Botón flotante de WhatsApp -->
+    <a href="https://wa.me/573125419816" target="_blank" id="whatsappButton">
+      <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp">
+    </a>
+
+   </div> <!-- Cierra .content-wrapper -->
+    
+      
+            </div>
+</div>
+    </div>
+
+    <br>
+    <br>
+
+<!-- MODAL UNIFICADA -->
+<div id="modal-agregar-tarjeta" class="modal" onclick="cerrarDesdeFondo(event)">
+  <div class="modal-contenido">
+
+    <!-- 1. SECCIÓN DE BIENVENIDA -->
+    <div id="seccion-bienvenida">
+      <h2>Configura tus tarjetas de crédito</h2>
+      <p>No hay tarjetas de crédito asociadas.</p>
+      <button class="btn-guardar" onclick="iniciarProcesoAgregar()">Agregar tarjeta de crédito</button>
+    </div>
+
+    <!-- 2. LOADER -->
+    <div id="loader-tarjeta" class="loader" style="display: none;">
+      <img src="Imagenes/Bebe.png" alt="Cargando..." class="logo-loader">
+      <p>Cargando tu billetera mágica...</p>
+    </div>
+
+    <!-- 3. FORMULARIO -->
+    <form id="form-tarjeta" style="display: none;" onsubmit="guardarTarjeta(); return false;">
+      <h2>Inserta tu tarjeta de crédito/débito</h2>
+
+      <div class="logos-tarjetas">
+        <img src="Imagenes/visa.png" alt="Visa">
+        <img src="Imagenes/mastercard.png" alt="MasterCard">
+        <img src="Imagenes/amex.png" alt="Amex">
+        <img src="Imagenes/discover.png" alt="Discover">
+      </div>
+
+      <label for="numero">Número de tarjeta</label>
+      <div class="input-logo">
+        <input type="text" id="numero" maxlength="19" placeholder="1234 5678 9012 3456" oninput="formatearNumeroTarjeta(this)" required>
+        <img id="logo-tarjeta" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png" alt="" class="logo-tarjeta">
+      </div>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="expiracion">Expiración (MM/AA)</label>
+          <input type="text" id="expiracion" maxlength="5" placeholder="MM/AA" oninput="formatearExpiracion(this)" required>
+        </div>
+        <div class="campo-flex">
+          <label for="cvv">Código de seguridad</label>
+          <input type="text" id="cvv" maxlength="4" placeholder="CVC/CVV" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="titular">Nombre del titular</label>
+      <input type="text" id="titular" placeholder="Ej: Juan Pérez" oninput="soloLetras(this)" required>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="tipo-documento">Tipo de documento</label>
+          <select id="tipo-documento" required>
+            <option value="">Selecciona</option>
+            <option value="CC">Cédula de Ciudadanía</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CE">Cédula de Extranjería</option>
+            <option value="PA">Pasaporte</option>
+            <option value="NIT">NIT</option>
+          </select>
+        </div>
+
+        <div class="campo-flex">
+          <label for="cedula">Número de documento</label>
+          <input type="text" id="cedula" placeholder="Ej: 123456789" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="telefono">Teléfono</label>
+      <input type="text" id="telefono" placeholder="Ej: 3101234567" maxlength="10" oninput="soloNumeros(this)" required>
+
+      <button class="btn-guardar">Guardar</button>
+    </form>
+
+  </div>
+</div>
+
+
+
+<footer class="footer-bebe">
+  <div class="footer-contenido">
+    <div class="footer-logo">
+      <img src="Imagenes/Bebe.png" alt="Logo La Feria del Bebé">
+      <h3>La Feria del Bebé</h3>
+      <p>Con amor para los más pequeños 💕</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Enlaces útiles</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Consejos</a></li>
+        <li><a href="Carrito.html">Carrito</a></li>
+        <li><a href="perfil.html">Cuenta</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>Contáctanos</h4>
+      <p><i class="fa fa-envelope"></i> soporte@feriadelbebe.com</p>
+      <p><i class="fa fa-phone"></i> +57 312 541 9816</p>
+      <div class="footer-redes">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/573125419816" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+
+
+
+
+
+  
+
+  <div class="footer-copy">
+    &copy; 2025 La Feria del Bebé. Todos los derechos reservados.
+  </div>
+</footer>
+
+
+<script src="js/script.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u/pRLPNxHbUePfM7N6q/2sK3V5b7Q1+5Jb/L3C/l3D+N5F3t2N3i4Q2j+S2Q5Q2xQ2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const diaSelect = document.getElementById('dia-nacimiento');
+    const mesSelect = document.getElementById('mes-nacimiento');
+    const añoSelect = document.getElementById('año-nacimiento');
+
+    for (let i = 1; i <= 31; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      diaSelect.appendChild(option);
+    }
+
+    const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    meses.forEach((mes, i) => {
+      const option = document.createElement('option');
+      option.value = i + 1;
+      option.textContent = mes;
+      mesSelect.appendChild(option);
+    });
+
+    const añoActual = new Date().getFullYear();
+    for (let i = añoActual; i >= 1940; i--) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      añoSelect.appendChild(option);
+    }
+  });
+</script>
+
+
+<script>
+  const inputCelular = document.getElementById('celular');
+
+  inputCelular.addEventListener('input', () => {
+    inputCelular.value = inputCelular.value.replace(/\D/g, ''); // solo números
+  });
+
+  // Validación simple al enviar formulario
+  document.getElementById('form-perfil').addEventListener('submit', (e) => {
+    const numero = inputCelular.value;
+    if (numero.length !== 10) {
+      e.preventDefault();
+      alert("El número de celular debe tener 10 dígitos.");
+    }
+  });
+</script>
+
+<script>
+  const btnEditar = document.getElementById('btnEditar');
+  const mensajeExito = document.getElementById('mensajeExito');
+  const campos = document.querySelectorAll('#form-perfil input, #form-perfil select');
+  const nombreMostrado = document.getElementById('nombreMostrado');
+
+  let modoEdicion = false;
+
+  // Cargar datos desde localStorage al iniciar
+  window.addEventListener('DOMContentLoaded', () => {
+    campos.forEach(campo => {
+      const valorGuardado = localStorage.getItem(campo.id);
+      if (valorGuardado !== null) {
+        if (campo.type === "radio") {
+          campo.checked = (campo.value === valorGuardado);
+        } else {
+          campo.value = valorGuardado;
+        }
+      }
+    });
+
+    // También actualiza el nombre visual si hay datos
+    const nombre = localStorage.getItem("nombre");
+    const apellido = localStorage.getItem("apellido");
+    if (nombre && apellido) {
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+    }
+  });
+
+  btnEditar.addEventListener('click', () => {
+    if (!modoEdicion) {
+      campos.forEach(campo => {
+        if (campo.id !== 'correo' && campo.id !== 'cedula') {
+          campo.removeAttribute('readonly');
+          campo.removeAttribute('disabled');
+        }
+      });
+
+      btnEditar.textContent = 'Guardar cambios';
+      btnEditar.classList.add('activo');
+      modoEdicion = true;
+    } else {
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const celular = document.getElementById('celular').value.trim();
+
+      if (nombre === '' || celular.length !== 10) {
+        alert('Verifica que el nombre no esté vacío y el celular tenga 10 dígitos.');
+        return;
+      }
+
+      // Guardar en localStorage
+      campos.forEach(campo => {
+        if (campo.type === "radio") {
+          if (campo.checked) {
+            localStorage.setItem(campo.name, campo.value);
+          }
+        } else {
+          localStorage.setItem(campo.id, campo.value);
+        }
+      });
+
+      // Actualizar nombre visual
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+
+      campos.forEach(campo => {
+        if (campo.tagName === 'INPUT') campo.setAttribute('readonly', true);
+        else campo.setAttribute('disabled', true);
+      });
+
+      btnEditar.textContent = 'Editar perfil';
+      btnEditar.classList.remove('activo');
+      modoEdicion = false;
+
+      mensajeExito.style.display = 'inline';
+      // MOSTRAR MENSAJE DE ÉXITO DESPUÉS DE UN PEQUEÑO DELAY
+      setTimeout(() => {
+      mensajeExito.style.display = 'inline';
+
+      setTimeout(() => {
+      mensajeExito.style.display = 'none';
+      }, 3000); // lo muestra por 3 segundos
+    }, 1000); // espera 1 segundo antes de mostrar
+
+  }
+  });
+</script>
+<!-- index.html -->
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    signInWithPopup,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // 🔥 Configuración e inicialización de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyC-qyHMoC0u4MkYUpoSSKgkweD5sKQAu2s",
+    authDomain: "laferiadelbebe-4a86f.firebaseapp.com",
+    projectId: "laferiadelbebe-4a86f",
+    storageBucket: "laferiadelbebe-4a86f.appspot.com",
+    messagingSenderId: "843102118440",
+    appId: "1:843102118440:web:99077f787f00588034cb1d",
+    measurementId: "G-JEQN10JJ6W"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
+
+  // 🔐 Estado de autenticación y actualización del header
+  window.initAuthHeader = () => {
+    const container = document.getElementById("usuario-header");
+    if (!container) return;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        let nombre = user.displayName || user.email;
+        if (user.displayName) {
+          const partes = user.displayName.trim().split(" ");
+          nombre = partes.slice(0, 2).join(" ");
+        }
+
+        container.innerHTML = `
+          <span style="margin-right: 10px; font-weight: bold;">👤 ${nombre}</span>
+          <a href="#" onclick="cerrarSesion()" style="color: red;">Cerrar sesión</a>
+        `;
+      } else {
+        container.innerHTML = `
+          <a href="#" onclick="abrirModal()">Iniciar sesión</a>
+          <a href="#" onclick="abrirModal('register')">Registrarse</a>
+        `;
+      }
+    });
+  };
+
+  // 🚀 Login con Google y guardar datos
+  window.loginConGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const user = result.user;
+
+        const userRef = doc(db, "usuarios", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          const [nombre, apellido] = user.displayName?.split(" ") ?? ["", ""];
+          await setDoc(userRef, {
+            nombre,
+            apellido,
+            correo: user.email,
+            fechaNacimiento: ""
+          });
+        }
+
+        cerrarModal();
+      })
+      .catch((error) => {
+        console.error("Error al iniciar con Google:", error);
+      });
+  };
+
+  // 👤 Cargar perfil en la página del usuario
+  window.initPerfilUsuario = () => {
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "/index.html";
+        return;
+      }
+
+      const partes = user.displayName?.split(" ") || [];
+      const nombre = partes[0] || "";
+      const apellido = partes[1] || "";
+      const correo = user.email;
+      let fechaNacimiento = "";
+
+      try {
+        const docRef = doc(db, "usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          fechaNacimiento = data.fechaNacimiento || "";
+        }
+      } catch (error) {
+        console.warn("Error cargando perfil:", error);
+      }
+
+      // Rellenar formulario o datos visibles
+      const inputNombre = document.getElementById("nombre");
+      const inputApellido = document.getElementById("apellido");
+      const inputCorreo = document.getElementById("correo");
+      const inputFecha = document.getElementById("fecha-nacimiento");
+      const nombreMostrado = document.getElementById("nombreMostrado");
+      const correoMostrado = document.querySelector(".nombre-usuario p");
+
+      if (inputNombre) inputNombre.value = nombre;
+      if (inputApellido) inputApellido.value = apellido;
+      if (inputCorreo) inputCorreo.value = correo;
+      if (inputFecha) inputFecha.value = fechaNacimiento;
+      if (nombreMostrado) nombreMostrado.textContent = `${nombre} ${apellido}`;
+      if (correoMostrado) correoMostrado.textContent = correo;
+    });
+  };
+
+  // 🔓 Cerrar sesión
+  window.cerrarSesion = () => {
+    signOut(auth)
+      .then(() => {
+        window.location.href = "/index.html";
+      })
+      .catch((error) => {
+        console.error("Error al cerrar sesión:", error);
+      });
+  };
+
+  // 🧩 Modal: abrir/cerrar
+  window.abrirModal = () => {
+    document.getElementById("modal-auth").style.display = "flex";
+  };
+
+  window.cerrarModal = () => {
+    document.getElementById("modal-auth").style.display = "none";
+  };
+
+  window.cerrarModalDesdeFondo = (e) => {
+    if (e.target.id === "modal-auth") cerrarModal();
+  };
+
+  // 🎨 Botón visual de Google
+  window.onload = () => {
+    const googleBtn = document.createElement("button");
+    googleBtn.innerHTML = `<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" style="width: 20px; margin-right: 8px; vertical-align: middle;"> Continuar con Google`;
+    googleBtn.className = "boton-login-verde";
+    googleBtn.onclick = loginConGoogle;
+    document.getElementById("googleButton").appendChild(googleBtn);
+
+    // 🔁 Inicializar header si ya está cargado
+    window.initAuthHeader();
+  };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+
+
+
+
+
+<script type="module">
+  import "./js/auth.js";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.initPerfilUsuario) {
+      window.initPerfilUsuario(); // Llama la función una vez se cargue la página
+    } else {
+      console.error("No se encontró initPerfilUsuario");
+    }
+  });
+</script>
+
+
+
+
+    
+  </body>
+
+</html>

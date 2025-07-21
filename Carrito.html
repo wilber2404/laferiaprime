@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Feria del Bebé</title>
+  <link rel="icon" href="Imagenes/Bebe.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+<style>
+
+
+
+
+.carrito-contenedor {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.carrito-productos {
+  flex: 1;
+  min-width: 550px;
+}
+
+.carrito-productos h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.carrito-envio {
+  background: #e3f2fd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  color: #1565c0;
+  font-weight: bold;
+}
+
+.envio-tiempo {
+  float: right;
+  font-size: 14px;
+  background: #bbdefb;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.producto-carrito {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.producto-img-descuento {
+  position: relative;
+}
+
+.etiqueta-descuento {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: #ffeb3b;
+  color: #000;
+  font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.img-producto {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 15px;
+}
+
+.producto-info {
+  flex: 1;
+}
+
+.producto-info p {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.cantidad-precio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.contador button {
+  background: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.contador span {
+  padding: 0 10px;
+  font-weight: bold;
+}
+
+.precios {
+  text-align: right;
+}
+
+.precio-final {
+  font-weight: bold;
+  color: #1a237e;
+}
+
+.precio-anterior {
+  font-size: 14px;
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 15px;
+}
+
+.carrito-resumen {
+  width: 320px;
+}
+
+.direccion-dropdown {
+  background: #f1f1f1;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.resumen-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.ahorro-prime {
+  background: #e3f2fd;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.btn-ahorrar {
+  background: #ffeb3b;
+  color: #000;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.input-cupon {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.btn-redimir {
+  background: #2196f3;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.linea-resumen {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 15px;
+}
+
+.linea-resumen.ahorro {
+  color: green;
+}
+
+.linea-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+.btn-pagar {
+  width: 100%;
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.producto-carrito {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  gap: 10px;
+}
+
+.producto-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.producto-info img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.producto-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.precio-unitario {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.producto-controles {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.producto-controles button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.producto-total {
+  font-weight: bold;
+  font-size: 16px;
+  color: #222;
+  width: 100px;
+  text-align: right;
+}
+
+.btn-eliminar {
+  background-color: #ff4d4f;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #d9363e;
+}
+
+.producto-carrito {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.producto-carrito.eliminando {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.producto-carrito {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.producto-carrito.eliminando {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.mensaje-descuento {
+  background: #f0fff4;
+  color: #2d7a46;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-left: 5px solid #4CAF50;
+  font-weight: bold;
+  border-radius: 10px;
+  animation: fadein 0.5s ease-in-out;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.precio-unitario {
+  font-size: 0.95rem;
+}
+
+.precio-descuento {
+  color: #1e90ff;
+  font-weight: bold;
+  display: block;
+  font-size: 1.1rem;
+}
+
+.precio-original {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.producto-carrito {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  gap: 1rem;
+}
+
+.producto-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 2;
+}
+
+.producto-info img {
+  width: 50px;
+  height: auto;
+}
+
+.producto-controles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.producto-precios {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 110px;
+}
+
+.precio-descuento {
+  color: #1a73e8;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.precio-original {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 13px;
+}
+
+.btn-eliminar {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #999;
+}
+
+
+
+.resumen-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.resumen-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.8);
+  backdrop-filter: blur(2px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.loader-contenido {
+  text-align: center;
+  color: #444;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.loader-contenido i {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+
+
+
+</style>
+
+</head>
+
+<body>
+
+  <div id="loader">
+  <img src="Imagenes/Bebe.png" alt="Cargando..." class="logo-loader" />
+</div>
+
+
+    <div class="header">
+        <div class="header-left">
+            <img src="Imagenes/Bebe.png" alt="Logo" class="logo-img">
+            <a href="index.html" class="nombre-marca"><strong>La Feria del Bebé</strong></a>
+        </div>
+
+       <div class="search-container">
+        <div class="search-box">
+        <input type="text" id="buscador" placeholder="Buscar productos...">
+        <button id="botonBuscar">🔍</button>
+        </div>
+        </div>
+
+        <div class="header-right">
+
+            <div class="selector-ubicacion-wrapper">
+                <div class="selector-ubicacion-header" id="selectorCiudad" onclick="toggleMenu()">
+                    <img src="Imagenes/comolbia.pgn.webp" alt="#" class="bandera-header">
+                    <span id="ubicacion-seleccionada-header" class="ciudad-texto">Colombia</span>
+                    <span class="flecha-header">▼</span>
+                </div>
+
+                <ul class="lista-ciudades-header" id="listaCiudades">
+                    <li onclick="seleccionarCiudad('quibdo', 'Quibdó')">Quibdó</li>
+                    <li onclick="seleccionarCiudad('bucaramanga', 'Bucaramanga')">Bucaramanga</li>
+                    <li onclick="seleccionarCiudad('medellin', 'Medellín')">Medellín</li>
+                    <li onclick="seleccionarCiudad('cali', 'Cali')">Cali</li>
+                </ul>
+            </div>
+
+            <div id="usuario-header">
+            <a href="#" onclick="abrirModal()">Iniciar sesión</a>
+            <a href="#" onclick="abrirModal('register')">Registrarse</a>
+            </div>
+            <span id="nombre-usuario-header" style="display: none; color: white; font-weight: bold;"></span>
+            <a href="#" id="btn-logout-header" onclick="cerrarSesion()" style="display: none;">Cerrar sesión</a>
+            <a href="#" id="carrito-link" style="color: white; font-weight: bold; text-decoration: none;">
+    🛒 <span id="contador-carrito">0</span>
+</a>
+        </div>
+    </div>
+
+    <div class="subnav">
+  <a href="cupones.html">Cupones</a>
+  <a href="productos.html">Todo para tu bebé</a>
+  <a href="consejos.html">Consejos de mamá</a>
+  <a href="ofertas.html">Ofertas exclusivas</a>
+  <a href="ayuda.html">Ayuda</a>
+</div>
+
+    
+ 
+<section class="carrito-contenedor">
+  <div class="carrito-productos">
+    <h2>🛒 Carrito <span>(0 productos)</span></h2>
+    <div class="carrito-envio">
+      <i class="fa-solid fa-motorcycle"></i> Envío express • Entregado por: <strong>La Feria Del Bebé</strong>
+      <span class="envio-tiempo">🚴‍♂️ 35 min Express</span>
+    </div>
+    <!-- Aquí se van a insertar los productos con JS -->
+  </div>
+
+  <div class="carrito-resumen">
+    <div class="direccion-dropdown">
+      Selecciona dirección de entrega ▼
+    </div>
+
+    <div class="resumen-box">
+      <div class="ahorro-prime">
+        <img src="imagenes/prime.png" alt="Prime"> 
+        Siendo prime ahorras: <strong>$7.500</strong> <button class="btn-ahorrar">Quiero ahorrar</button>
+      </div>
+
+      <input type="text" placeholder="Ingresa el cupón" class="input-cupon">
+      <button class="btn-redimir">Redimir</button>
+
+      <div class="linea-resumen">
+        <span>Costo de productos</span>
+        <span id="costo-productos">$0</span>
+      </div>
+
+      <div class="linea-resumen ahorro" id="fila-ahorro">
+        <span>Ahorro en productos</span>
+        <span id="ahorro-productos">–$0</span>
+      </div>
+
+      <div class="linea-resumen">
+        <span>Costo domicilio</span>
+        <span>$6.000</span>
+      </div>
+
+      <div class="linea-total">
+        <span>Total</span>
+        <span id="total-final">$7.500</span>
+      </div>
+
+      <button class="btn-pagar">Ir a pagar</button>
+
+      <!-- 🔄 LOADER DENTRO del resumen-box -->
+      <div class="resumen-loader" id="resumen-loader">
+        <div class="loader-contenido">
+          <i class="fa-solid fa-rotate fa-spin"></i>
+          <p>Actualizando precios...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+</div>
+
+<!-- MODAL UNIFICADA -->
+ 
+<div id="modal-agregar-tarjeta" class="modal" style="display: none;" onclick="cerrarDesdeFondo(event)">
+
+  <div class="modal-contenido">
+
+    <!-- 1. SECCIÓN DE BIENVENIDA -->
+    <div id="seccion-bienvenida">
+      <h2>Configura tus tarjetas de crédito</h2>
+      <p>No hay tarjetas de crédito asociadas.</p>
+      <button class="btn-guardar" onclick="iniciarProcesoAgregar()">Agregar tarjeta de crédito</button>
+    </div>
+
+    <!-- 2. LOADER -->
+    <div id="loader-tarjeta" class="loader" style="display: none;">
+      <img src="Imagenes/Bebe.png" alt="Cargando..." class="logo-loader">
+      <p>Cargando tu billetera mágica...</p>
+    </div>
+
+    <!-- 3. FORMULARIO -->
+    <form id="form-tarjeta" style="display: none;" onsubmit="guardarTarjeta(); return false;">
+      <h2>Inserta tu tarjeta de crédito/débito</h2>
+
+      <div class="logos-tarjetas">
+        <img src="Imagenes/visa.png" alt="Visa">
+        <img src="Imagenes/mastercard.png" alt="MasterCard">
+        <img src="Imagenes/amex.png" alt="Amex">
+        <img src="Imagenes/discover.png" alt="Discover">
+      </div>
+
+      <label for="numero">Número de tarjeta</label>
+      <div class="input-logo">
+        <input type="text" id="numero" maxlength="19" placeholder="1234 5678 9012 3456" oninput="formatearNumeroTarjeta(this)" required>
+        <img id="logo-tarjeta" src="https://upload.wikimedia.org/wikipedia/commons/5/59/Empty.png" alt="" class="logo-tarjeta">
+      </div>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="expiracion">Expiración (MM/AA)</label>
+          <input type="text" id="expiracion" maxlength="5" placeholder="MM/AA" oninput="formatearExpiracion(this)" required>
+        </div>
+        <div class="campo-flex">
+          <label for="cvv">Código de seguridad</label>
+          <input type="text" id="cvv" maxlength="4" placeholder="CVC/CVV" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="titular">Nombre del titular</label>
+      <input type="text" id="titular" placeholder="Ej: Juan Pérez" oninput="soloLetras(this)" required>
+
+      <div class="fila-flex">
+        <div class="campo-flex">
+          <label for="tipo-documento">Tipo de documento</label>
+          <select id="tipo-documento" required>
+            <option value="">Selecciona</option>
+            <option value="CC">Cédula de Ciudadanía</option>
+            <option value="TI">Tarjeta de Identidad</option>
+            <option value="CE">Cédula de Extranjería</option>
+            <option value="PA">Pasaporte</option>
+            <option value="NIT">NIT</option>
+          </select>
+        </div>
+
+        <div class="campo-flex">
+          <label for="cedula">Número de documento</label>
+          <input type="text" id="cedula" placeholder="Ej: 123456789" oninput="soloNumeros(this)" required>
+        </div>
+      </div>
+
+      <label for="telefono">Teléfono</label>
+      <input type="text" id="telefono" placeholder="Ej: 3101234567" maxlength="10" oninput="soloNumeros(this)" required>
+
+      <button class="btn-guardar">Guardar</button>
+    </form>
+
+  </div>
+</div>
+        
+
+
+
+
+<footer class="footer-bebe">
+  <div class="footer-contenido">
+    <div class="footer-logo">
+      <img src="Imagenes/Bebe.png" alt="Logo La Feria del Bebé">
+      <h3>La Feria del Bebé</h3>
+      <p>Con amor para los más pequeños 💕</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Enlaces útiles</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Consejos</a></li>
+        <li><a href="Carrito.html">Carrito</a></li>
+        <li><a href="perfil.html">Cuenta</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>Contáctanos</h4>
+      <p><i class="fa fa-envelope"></i> soporte@feriadelbebe.com</p>
+      <p><i class="fa fa-phone"></i> +57 312 541 9816</p>
+      <div class="footer-redes">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/573125419816" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="footer-copy">
+    &copy; 2025 La Feria del Bebé. Todos los derechos reservados.
+  </div>
+</footer>
+
+
+<script src="js/script.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js" integrity="sha512-u/pRLPNxHbUePfM7N6q/2sK3V5b7Q1+5Jb/L3C/l3D+N5F3t2N3i4Q2j+S2Q5Q2xQ2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q2Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Seleccionar los elementos
+    const diaSelect = document.getElementById('dia-nacimiento');
+    const mesSelect = document.getElementById('mes-nacimiento');
+    const añoSelect = document.getElementById('año-nacimiento');
+
+    // Llenar días del 1 al 31
+    for (let i = 1; i <= 31; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      diaSelect.appendChild(option);
+    }
+
+    // Llenar meses
+    const meses = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    meses.forEach((mes, i) => {
+      const option = document.createElement('option');
+      option.value = i + 1;
+      option.textContent = mes;
+      mesSelect.appendChild(option);
+    });
+
+    // Llenar años desde el actual hasta 1940
+    const añoActual = new Date().getFullYear();
+    for (let i = añoActual; i >= 1940; i--) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      añoSelect.appendChild(option);
+    }
+  });
+</script>
+
+<script>
+  const inputCelular = document.getElementById('celular');
+
+  inputCelular.addEventListener('input', () => {
+    inputCelular.value = inputCelular.value.replace(/\D/g, ''); // solo números
+  });
+
+  // Validación simple al enviar formulario
+  document.getElementById('form-perfil').addEventListener('submit', (e) => {
+    const numero = inputCelular.value;
+    if (numero.length !== 10) {
+      e.preventDefault();
+      alert("El número de celular debe tener 10 dígitos.");
+    }
+  });
+</script>
+
+<script>
+  const btnEditar = document.getElementById('btnEditar');
+  const mensajeExito = document.getElementById('mensajeExito');
+  const campos = document.querySelectorAll('#form-perfil input, #form-perfil select');
+  const nombreMostrado = document.getElementById('nombreMostrado');
+
+  let modoEdicion = false;
+
+  // Cargar datos desde localStorage al iniciar
+  window.addEventListener('DOMContentLoaded', () => {
+    campos.forEach(campo => {
+      const valorGuardado = localStorage.getItem(campo.id);
+      if (valorGuardado !== null) {
+        if (campo.type === "radio") {
+          campo.checked = (campo.value === valorGuardado);
+        } else {
+          campo.value = valorGuardado;
+        }
+      }
+    });
+
+    // También actualiza el nombre visual si hay datos
+    const nombre = localStorage.getItem("nombre");
+    const apellido = localStorage.getItem("apellido");
+    if (nombre && apellido) {
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+    }
+  });
+
+  btnEditar.addEventListener('click', () => {
+    if (!modoEdicion) {
+      campos.forEach(campo => {
+        if (campo.id !== 'correo' && campo.id !== 'cedula') {
+          campo.removeAttribute('readonly');
+          campo.removeAttribute('disabled');
+        }
+      });
+
+      btnEditar.textContent = 'Guardar cambios';
+      btnEditar.classList.add('activo');
+      modoEdicion = true;
+    } else {
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const celular = document.getElementById('celular').value.trim();
+
+      if (nombre === '' || celular.length !== 10) {
+        alert('Verifica que el nombre no esté vacío y el celular tenga 10 dígitos.');
+        return;
+      }
+
+      // Guardar en localStorage
+      campos.forEach(campo => {
+        if (campo.type === "radio") {
+          if (campo.checked) {
+            localStorage.setItem(campo.name, campo.value);
+          }
+        } else {
+          localStorage.setItem(campo.id, campo.value);
+        }
+      });
+
+      // Actualizar nombre visual
+      nombreMostrado.textContent = `${nombre} ${apellido}`;
+
+      campos.forEach(campo => {
+        if (campo.tagName === 'INPUT') campo.setAttribute('readonly', true);
+        else campo.setAttribute('disabled', true);
+      });
+
+      btnEditar.textContent = 'Editar perfil';
+      btnEditar.classList.remove('activo');
+      modoEdicion = false;
+
+      mensajeExito.style.display = 'inline';
+      // MOSTRAR MENSAJE DE ÉXITO DESPUÉS DE UN PEQUEÑO DELAY
+      setTimeout(() => {
+      mensajeExito.style.display = 'inline';
+
+      setTimeout(() => {
+      mensajeExito.style.display = 'none';
+      }, 3000); // lo muestra por 3 segundos
+    }, 1000); // espera 1 segundo antes de mostrar
+
+  }
+  });
+</script>
+<!-- index.html -->
+
+<script>
+const carritoProductos = document.querySelector(".carrito-productos");
+const spanCantidad = document.querySelector(".carrito-productos h2 span");
+const costoProductos = document.getElementById("costo-productos");
+const ahorroProductos = document.getElementById("ahorro-productos");
+const totalFinal = document.getElementById("total-final");
+const filaAhorro = document.getElementById("fila-ahorro");
+
+// Domicilio fijo (no se ve como producto, solo suma al total)
+const costoDomicilio = 6000;
+
+// Obtener carrito del localStorage
+let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+// Bolsa automática (si no existe ya)
+const bolsa = {
+  id: "bolsa-farmatodo",
+  nombre: "Bolsa Plástica",
+  precio: 200,
+  precioOriginal: null,
+  img: "Imagenes/bolsa.png",
+  cantidad: 1
+};
+if (!carrito.find(p => p.id === bolsa.id)) {
+  carrito.push(bolsa);
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+function actualizarCarrito() {
+  carritoProductos.querySelectorAll('.producto-carrito').forEach(p => p.remove());
+
+  if (!carrito || carrito.length === 0) {
+    spanCantidad.textContent = "(0 productos)";
+    costoProductos.textContent = "$0";
+    ahorroProductos.textContent = "–$0";
+    totalFinal.textContent = "$0";
+    filaAhorro.style.display = "none";
+    carritoProductos.innerHTML += `<p>No hay productos en el carrito.</p>`;
+    return;
+  }
+
+  carrito.forEach(producto => {
+    const div = document.createElement('div');
+    div.classList.add('producto-carrito');
+    div.setAttribute('data-id', producto.id);
+
+    div.innerHTML = `
+      <div class="producto-info">
+        <img src="${producto.img}" alt="${producto.nombre}">
+        <div>
+          <h4>${producto.nombre}</h4>
+        </div>
+      </div>
+
+      <div class="producto-controles">
+        <button onclick="cambiarCantidad('${producto.id}', -1)">−</button>
+        <span>${producto.cantidad}</span>
+        <button onclick="cambiarCantidad('${producto.id}', 1)">+</button>
+      </div>
+
+      <div class="producto-precios">
+        <span class="precio-descuento">$${producto.precio.toLocaleString()}</span>
+        ${producto.precioOriginal ? `<span class="precio-original">$${producto.precioOriginal.toLocaleString()}</span>` : ''}
+      </div>
+
+      <button class="btn-eliminar" onclick="eliminarProducto('${producto.id}')">✕</button>
+    `;
+    carritoProductos.appendChild(div);
+  });
+
+  // Subtotal (sin domicilio)
+  const subtotal = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
+
+  // Ahorro en productos con descuento
+  const ahorroProductosTotal = carrito.reduce((acc, p) => {
+    if (p.precioOriginal && p.precioOriginal > p.precio) {
+      return acc + ((p.precioOriginal - p.precio) * p.cantidad);
+    }
+    return acc;
+  }, 0);
+
+  // Total general
+  const total = subtotal + costoDomicilio;
+
+  // Actualizar resumen
+  spanCantidad.textContent = `(${carrito.length} producto${carrito.length !== 1 ? 's' : ''})`;
+  costoProductos.textContent = `$${subtotal.toLocaleString()}`;
+  totalFinal.textContent = `$${total.toLocaleString()}`;
+
+  // Mostrar u ocultar el "Ahorro en productos"
+  if (ahorroProductosTotal > 0) {
+    filaAhorro.style.display = "flex"; // puedes usar block si prefieres
+    ahorroProductos.textContent = `–$${ahorroProductosTotal.toLocaleString()}`;
+  } else {
+    filaAhorro.style.display = "none";
+  }
+}
+
+function cambiarCantidad(id, valor) {
+  const loaderResumen = document.getElementById("resumen-loader");
+  loaderResumen.style.display = "flex"; // Mostrar overlay
+
+  carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+  const item = carrito.find(p => p.id === id);
+  if (!item) return;
+
+  item.cantidad += valor;
+  if (item.cantidad <= 0) {
+    carrito = carrito.filter(p => p.id !== id);
+  }
+
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+
+  setTimeout(() => {
+    actualizarCarrito();
+    loaderResumen.style.display = "none";
+  }, 1500);
+}
+
+
+
+function eliminarProducto(id) {
+  carrito = carrito.filter(p => p.id !== id);
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+
+  const elemento = document.querySelector(`.producto-carrito[data-id="${id}"]`);
+  if (elemento) {
+    elemento.classList.add('eliminando');
+    setTimeout(() => {
+      elemento.remove();
+      actualizarCarrito();
+    }, 300);
+  } else {
+    actualizarCarrito();
+  }
+}
+
+actualizarCarrito();
+</script>
+
+
+
+
+
+
+
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    // 🔥 TU CONFIG DE FIREBASE AQUÍ
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // 👉 Iniciar sesión con Google
+  window.loginConGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log("Google login:", result.user);
+        cerrarModal(); // ✅ cerrar modal
+      })
+      .catch((error) => {
+        console.error("Error al iniciar con Google:", error);
+      });
+  };
+
+  // 👉 Iniciar sesión con email/clave
+  document.getElementById("form-login").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("login-usuario").value;
+    const password = document.getElementById("login-clave").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("Login normal:", userCredential.user);
+        cerrarModal(); // ✅ cerrar modal
+      })
+      .catch((error) => {
+        alert("Credenciales incorrectas o error en el login.");
+        console.error(error);
+      });
+  });
+
+  // 👉 Registro de nuevo usuario
+  document.getElementById("form-register").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("register-email").value;
+    const password = document.getElementById("register-password").value;
+    const confirm = document.getElementById("register-confirm").value;
+
+    if (password !== confirm) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log("Usuario registrado:", userCredential.user);
+        cerrarModal(); // ✅ cerrar modal
+      })
+      .catch((error) => {
+        alert("Error al registrar.");
+        console.error(error);
+      });
+  });
+
+  // 👉 Mostrar formulario login o registro
+  window.mostrarFormulario = (form) => {
+    document.getElementById("form-login").style.display = form === "login" ? "block" : "none";
+    document.getElementById("form-register").style.display = form === "register" ? "block" : "none";
+  };
+
+  // 👉 Función para cerrar el modal
+  window.cerrarModal = () => {
+    document.getElementById("modal-auth").style.display = "none";
+  };
+
+  // 👉 Cerrar modal haciendo clic fuera del contenido
+  window.cerrarModalDesdeFondo = (event) => {
+    if (event.target.id === "modal-auth") {
+      cerrarModal();
+    }
+  };
+
+  // 👉 Abrir modal (opcional)
+  window.abrirModal = () => {
+    document.getElementById("modal-auth").style.display = "flex";
+  };
+
+  // 👉 Inicializar botón de Google si ya existe
+  window.onload = () => {
+    const btn = document.createElement("button");
+    btn.textContent = "Iniciar con Google";
+    btn.onclick = loginConGoogle;
+    document.getElementById("googleButton").appendChild(btn);
+  };
+</script>
+
+
+
+
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+
+    // Espera 2 segundos antes de comenzar a ocultarlo
+    setTimeout(() => {
+      loader.style.opacity = 0;
+      setTimeout(() => loader.style.display = "none", 500); // Oculta después de la transición
+    },); 
+  });
+</script>
+
+
+
+
+<script type="module">
+  import "./js/auth.js";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.initPerfilUsuario) {
+      window.initPerfilUsuario(); // Llama la función una vez se cargue la página
+    } else {
+      console.error("No se encontró initPerfilUsuario");
+    }
+  });
+</script>
+
+  </body>
+
+</html>

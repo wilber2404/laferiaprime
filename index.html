@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Feria Del Bebé</title>
+  <link rel="icon" href="Imagenes/Bebe.png" type="image/png">
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<style>
+  #modal-auth {
+  display: none; /* 🔒 Oculto por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6); /* fondo oscuro */
+  z-index: 1000;
+}
+
+</style>
+
+<body>
+
+
+  <!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <button class="openbtn" onclick="abrirMenu()">☰</button>
+    <img src="Imagenes/Bebe.png" alt="Logo" class="logo-img">
+    <strong>La Feria del Bebé</strong>
+  </div>
+
+  <!-- Buscador -->
+  <div class="search-container">
+    <div class="search-box">
+      <input type="text" id="buscador" placeholder="Buscar productos...">
+      <button id="botonBuscar">🔍</button>
+    </div>
+    <div id="sugerencias" class="sugerencias"></div>
+  </div>
+
+  <!-- Resultados -->
+<div id="resultadosBusqueda" class="grid-productos"></div>
+
+  <!-- Parte derecha del header -->
+  <div class="header-right">
+    
+    <!-- Selector de ciudad AQUÍ -->
+    <div class="selector-ubicacion-wrapper">
+      <div class="selector-ubicacion-header" id="selectorCiudad" onclick="toggleMenu()">
+        <img src="Imagenes/comolbia.pgn.webp" alt="#" class="bandera-header">
+        <span id="ubicacion-seleccionada-header" class="ciudad-texto">Colombia</span>
+        <span class="flecha-header">▼</span>
+      </div>
+
+      <ul class="lista-ciudades-header" id="listaCiudades">
+        <li onclick="seleccionarCiudad('quibdo', 'Quibdó')">Quibdó</li>
+        <li onclick="seleccionarCiudad('bucaramanga', 'Bucaramanga')">Bucaramanga</li>
+        <li onclick="seleccionarCiudad('medellin', 'Medellín')">Medellín</li>
+        <li onclick="seleccionarCiudad('cali', 'Cali')">Cali</li>
+      </ul>
+    </div>
+
+    <!-- Loader pantalla completa -->
+<div id="loader-overlay">
+  <img src="Imagenes/Bebe.png" alt="Cargando..." class="loader-logo">
+</div>
+
+
+    <!-- Botones de sesión -->
+    <div id="usuario-header">
+    <a href="#" onclick="abrirModal()">Iniciar sesión</a>
+    <a href="#" onclick="abrirModal('register')">Registrarse</a>
+    </div>
+    <span id="nombre-usuario-header" style="display: none; color: white; font-weight: bold;"></span>
+    <a href="#" id="btn-logout-header" onclick="cerrarSesion()" style="display: none;">Cerrar sesión</a>
+    <a href="Carrito.html" id="carrito-link" style="color: white; font-weight: bold; text-decoration: none;">
+    🛒 <span id="contador-carrito">0</span>
+</a>
+  </div>
+</div>
+
+
+
+     
+
+    
+
+  <!-- Menú desplegable reemplazando el sidebar -->
+  <nav class="categorias" id="menuCategorias">
+    <button class="close-btn" onclick="cerrarMenu()">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3>Categorías</h3>
+    <a href="perfil.html" class="categoria"><img src="Imagenes/Mi perfil.png" alt="#"> Mi perfil</a>
+    <a href="#" class="categoria"><img src="img/bienestar.png" alt="#"> Bienestar y deporte</a>
+    <a href="#" class="categoria"><img src="img/belleza.png" alt="#"> Belleza</a>
+    <a href="#" class="categoria"><img src="img/bebe.png" alt="#"> Cuidado del bebé</a>
+    <a href="#" class="categoria"><img src="img/personal.png" alt="#"> Cuidado personal</a>
+    <a href="#" class="categoria"><img src="img/dermocosmetica.png" alt="#"> Dermocosmética</a>
+    <a href="#" class="categoria"><img src="img/alimentos.png" alt="#"> Alimentos y bebidas</a>
+    <a href="#" class="categoria"><img src="img/hogar.png" alt="#"> Hogar, mascotas y más</a>
+  </nav>
+
+  <!-- Subnav -->
+  <div class="subnav">
+  <a href="cupones.html">Cupones</a>
+  <a href="productos.html">Todo para tu bebé</a>
+  <a href="consejos.html">Consejos de mamá</a>
+  <a href="ofertas.html">Ofertas exclusivas</a>
+  <a href="ayuda.html">Ayuda</a>
+</div>
+
+
+
+
+
+
+
+
+  <div class="promo-carousel">
+    
+
+    <div class="carousel-slides">
+      <img src="Imagenes/la feria del bebe.png" class="carousel-image active" alt="Feria  del Bebé">
+      
+
+    </div>
+
+    
+  </div>
+
+
+  <div id="main" class="main-content">
+
+    <h1>Bienvenido a La Feria del Bebé</h1>
+    <p>Explora productos, consejos y amor para los más pequeños del hogar.</p>
+
+    <br>
+    <br>
+    <br>
+
+    <div class="baby-category-bar">
+      <div class="baby-category" data-categoria="panales">
+        <img src="Imagenes/Pañales.png" alt="Pañales">
+        <p>Pañales</p>
+      </div>
+
+      <div class="baby-category" data-categoria="juguetes">
+        <img src="Imagenes/Osito.png" alt="Juguetes">
+        <p>Juguetes</p>
+      </div>
+
+      <div class="baby-category" data-categoria="ropa">
+        <img src="Imagenes/Ropa.png" alt="Ropa Bebé">
+        <p>Ropa Bebé</p>
+      </div>
+
+      <div class="baby-category" data-categoria="alimentacion">
+        <img src="Imagenes/Comida2.png" alt="Alimentación">
+        <p>Alimentación</p>
+      </div>
+
+      <div class="baby-category" data-categoria="higiene">
+        <img src="Imagenes/Higiene.png" alt="Higiene">
+        <p>Higiene</p>
+      </div>
+    </div>
+
+
+    <div class="product-grid">
+     
+  
+  
+        <!-- Productos Higiene-->
+
+      <div class="product-card" data-categoria="higiene" data-id="prod-001">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-003">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-004">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-005">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-006">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-007">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-008">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-009">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-010">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-011">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-012">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-013">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-014">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-015">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-016">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-017">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="higiene" data-id="prod-018">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Tampones.png" alt="Tampón Nosotras Digital Super x30" class="product-image">
+
+  <h3 class="nombre-producto">Tampón Nosotras Digital Super x 30 Und</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="12640">$12.640 COP</span>
+    <span class="precio-original" data-precio-original="14000">$14.000 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<!-- Productos Alimentacion-->
+
+
+<div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+   <div class="product-card" data-categoria="alimentacion" data-id="prod-001">
+     <div class="etiqueta-descuento">-15%</div>
+ 
+     <img src="Imagenes/descarga.png" alt="Biberón Anticólicos" class="product-image">
+
+     <h3 class="nombre-producto">Biberón Anticólicos</h3>
+
+     <div class="precio-con-descuento">
+       <span class="precio-actual" data-precio="25000">$25.000 COP</span>
+       <span class="precio-original" data-precio-original="29500">$29.500 COP</span>
+     </div>
+
+     <button class="btn-comprar">🛒 Comprar</button>
+   </div>
+
+
+       <!-- Productos Pañales-->
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-002">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 2.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-003">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 3.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+
+    <div class="product-card" data-categoria="panales" data-id="prod-004">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 4.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-005">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 5.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-006">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 6.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-007">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 7.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-008">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    
+
+    <div class="product-card" data-categoria="panales" data-id="prod-010">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+    <div class="product-card" data-categoria="panales" data-id="prod-001">
+    <div class="etiqueta-descuento">20%</div>
+    <img src="Imagenes/Pañales 1.png" alt="Pañales">
+    <h3 class="nombre-producto">Pañales Winny Pants Xxxg Etapa 6 X 30 Und</h3>
+    <div class="precio-con-descuento">
+    <span class="precio-actual">$41.560 COP</span>
+    <span class="precio-original">$51.560 COP</span>
+    </div>
+    <button class="btn-comprar">🛒 Comprar</button>
+    </div>
+
+
+
+
+     <!-- Productos Juguetes-->
+
+      <div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="juguetes" data-id="prod-002">
+  <div class="etiqueta-descuento">-10%</div>
+
+  <img src="Imagenes/Juguete 1.png" alt="Juguete Bebé Sonajero Rosa Bright Starts" class="product-image">
+
+  <h3 class="nombre-producto">
+    Juguete Bebé Sonajero Rosa Bright Starts 8672 Blister x1
+  </h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="17940">$17.940 COP</span>
+    <span class="precio-original" data-precio-original="19940">$19.940 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+
+
+        <!-- Productos Ropa-->
+
+      <div class="product-card" data-categoria="ropa" data-id="prod-001">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-002">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-003">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-004">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-005">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-006">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+
+
+
+<div class="product-card" data-categoria="ropa" data-id="prod-007">
+  <div class="etiqueta-descuento">-5%</div>
+
+  <img src="Imagenes/Ropa1.png" alt="Body Bebé Azul" class="product-image">
+
+  <h3 class="nombre-producto">Body Bebé Azul</h3>
+
+  <div class="precio-con-descuento">
+    <span class="precio-actual" data-precio="18000">$18.000 COP</span>
+    <span class="precio-original" data-precio-original="18950">$18.950 COP</span>
+  </div>
+
+  <button class="btn-comprar">🛒 Comprar</button>
+</div>
+</div>
+</div>
+
+  <div id="modal-auth" class="modal" onclick="cerrarModalDesdeFondo(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <h2>Bienvenido a La Feria del Bebé</h2>
+
+    <div class="login-social-full">
+      <div id="googleButton"></div>
+    </div>
+
+    <div class="separator"><span>o</span></div>
+
+    <form id="form-login" class="form-auth">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-usuario" required>
+
+      <label>Contraseña</label>
+      <input type="password" id="login-clave" required>
+
+      <button type="submit" class="boton-login-verde">Iniciar sesión</button>
+
+      <p style="text-align: center; margin-top: 10px;">
+        ¿No tienes cuenta? <a href="#" onclick="mostrarFormulario('register')">Regístrate aquí</a>
+      </p>
+    </form>
+
+    <form id="form-register" class="form-auth" style="display: none;">
+      <label>Nombre</label>
+      <input type="text" id="register-nombre" required>
+
+      <label>Apellido</label>
+      <input type="text" id="register-apellido" required>
+
+      <label>Número de teléfono</label>
+      <input type="tel" id="register-telefono" required>
+
+      <label>Fecha de nacimiento</label>
+      <input type="date" id="register-fecha" required>
+
+      <label>Correo electrónico</label>
+      <input type="email" id="register-email" required>
+
+      <label>Contraseña</label>
+      <input type="password" id="register-password" required>
+
+      <label>Confirmar contraseña</label>
+      <input type="password" id="register-confirm" required>
+
+      <label><input type="checkbox" required> Acepto los términos y condiciones</label>
+
+      <button type="submit" class="boton-login-verde">Crear cuenta</button>
+
+      <p style="text-align: center; margin-top: 10px;">
+        ¿Ya tienes cuenta? <a href="#" onclick="mostrarFormulario('login')">Inicia sesión</a>
+      </p>
+    </form>
+  </div>
+</div>
+
+
+
+
+    <div class="separador-dinamico">
+  <span>💫 Nuestro Recomendado 💫</span>
+    </div>
+
+
+
+    <a href="https://wa.me/573125419816" target="_blank" id="whatsappButton">
+    <img src="https://img.icons8.com/color/48/000000/whatsapp--v1.png" alt="WhatsApp">
+    </a>
+
+  
+
+
+  <section class="recomendado-section">
+  <h2 class="recomendado-title">💎 Nuestro Recomendado</h2>
+  <div class="recomendado-card">
+    <img src="Imagenes/Juguete 1.png" alt="Producto recomendado">
+    <div class="recomendado-info">
+      <h3>Sonajero Bright Starts</h3>
+      <p>Perfecto para estimular los sentidos de tu bebé desde los primeros meses.</p>
+      <strong>$17.940 COP</strong>
+      <button class="btn-recomendado" onclick="agregarAlCarrito()">🛒 Comprar</button>
+    </div>
+  </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+<footer class="footer-bebe">
+  <div class="footer-contenido">
+    <div class="footer-logo">
+      <img src="Imagenes/Bebe.png" alt="Logo La Feria del Bebé">
+      <h3>La Feria del Bebé</h3>
+      <p>Con amor para los más pequeños 💕</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Enlaces útiles</h4>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="#">Ofertas</a></li>
+        <li><a href="#">Consejos</a></li>
+        <li><a href="Carrito.html">Carrito</a></li>
+        <li><a href="perfil.html">Cuenta</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>Contáctanos</h4>
+      <p><i class="fa fa-envelope"></i> soporte@feriadelbebe.com</p>
+      <p><i class="fa fa-phone"></i> +57 312 541 9816</p>
+      <div class="footer-redes">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/573125419816" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+
+
+
+
+
+  
+
+  <div class="footer-copy">
+    &copy; 2025 La Feria del Bebé. Todos los derechos reservados.
+  </div>
+</footer>
+
+
+
+
+  <script src="js/script.js"></script>
+
+
+
+
+<script>
+document.querySelectorAll('.btn-comprar').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.product-card');
+    const id = card.dataset.id || Math.random().toString(36).substring(7);
+    const nombre = card.querySelector('.nombre-producto').textContent;
+
+    const precioActualTexto = card.querySelector('.precio-actual')?.textContent || "0";
+    const precioOriginalTexto = card.querySelector('.precio-original')?.textContent || precioActualTexto;
+
+    const precio = parseInt(precioActualTexto.replace(/\D/g, ''));
+    const precioOriginal = parseInt(precioOriginalTexto.replace(/\D/g, ''));
+
+    const img = card.querySelector('img').src;
+
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    const existente = carrito.find(p => p.id === id);
+    if (existente) {
+      existente.cantidad += 1;
+    } else {
+      carrito.push({
+        id,
+        nombre,
+        precio,
+        precioOriginal,
+        img,
+        cantidad: 1
+      });
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    alert('🛒 Producto agregado al carrito');
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
